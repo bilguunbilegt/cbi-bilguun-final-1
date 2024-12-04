@@ -40,4 +40,4 @@ EXPOSE 8080 8000
 ENV PORT 8000
 
 # Run both the Go service and the Python environment
-CMD ["bash", "-c", "/cloud_sql_proxy -instances=bilguun3:us-central1:mypostgres=tcp:5432 & /main & python3 covid_forecasting.py && python3 covid_dashboard.py"]
+CMD ["bash", "-c", "/main & python3 -m http.server $PORT & python3 covid_forecasting.py && python3 covid_dashboard.py"]
