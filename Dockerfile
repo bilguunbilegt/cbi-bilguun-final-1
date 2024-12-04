@@ -33,10 +33,6 @@ WORKDIR /app
 COPY covid_forecasting.py .
 COPY covid_dashboard.py .
 
-# Copy the service account key for authentication
-COPY service-account-key.json /app/service-account-key.json
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/service-account-key.json"
-
 # Expose ports for both services
 EXPOSE 8080 8000
 
@@ -44,4 +40,4 @@ EXPOSE 8080 8000
 ENV PORT 8000
 
 # Run both the Go service and the Python environment
-CMD ["bash", "-c", "/cloud_sql_proxy -instances=bilguun3:us-central1:mypostgres=tcp:5432 -credential_file=/app/service-account-key.json & /main & python3 covid_forecasting.py && python3 covid_dashboard.py"]
+CMD ["bash", "-c", "/cloud_sql_proxy -instances=bilguun3:us-central1:mypostgres=tcp:5432 & /main & python3 covid_forecasting.py && python3 covid_dashboard.py"]
