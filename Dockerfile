@@ -16,7 +16,7 @@ FROM python:3.9-slim AS python-env
 
 # Install system dependencies required for Prophet, Python libraries, and Cloud SQL Auth Proxy
 RUN apt-get update && apt-get install -y \
-    libpq-dev gcc g++ make curl supervisor && \
+    libpq-dev gcc g++ make curl supervisord && \
     pip install --no-cache-dir pandas sqlalchemy psycopg2 prophet dash plotly pystan==2.19.1.1
 
 # Install the Cloud SQL Auth Proxy
@@ -33,8 +33,8 @@ WORKDIR /app
 COPY covid_forecasting.py .
 COPY covid_dashboard.py .
 
-# Create supervisor configuration to run Go and Python apps
-COPY supervisor.conf /etc/supervisor/conf.d/supervisord.conf
+# Create supervisord configuration to run Go and Python apps
+COPY supervisord.conf /etc/supervisord/conf.d/supervisord.conf
 
 # Expose ports for both services
 EXPOSE 8080 8000
