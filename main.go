@@ -282,7 +282,7 @@ func main() {
 		http.HandleFunc("/", handler)
 
 		// Determine port for HTTP service.
-		port := os.Getenv("PORT")
+		port := 8080
 		if port == "" {
 			port = "8080"
 			log.Printf("defaulting to port %s", port)
