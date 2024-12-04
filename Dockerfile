@@ -40,4 +40,4 @@ EXPOSE 8080 8000
 ENV PORT 8000
 
 # Run both the Go service and the Python environment
-CMD ["bash", "-c", "/main & python3 covid_dashboard.py"]
+CMD ["bash", "-c", "/main & python3 covid_forecasting.py && python3 covid_dashboard.py"]
