@@ -26,11 +26,41 @@ This project uses microservices to collect and process data from the City of Chi
 
 ---
 
+## Additional Components
+
+### 1. **COVID-19 Forecasting and Alerts**
+   - **Script**: `covid_forecasting.py`
+   - **Description**:
+     - Fetches historical COVID-19 case data from the database.
+     - Preprocesses the data and trains a Prophet model to forecast cases for the next 14 days.
+     - Classifies the forecasted cases into alert levels (`Low`, `Medium`, `High`).
+     - Saves the forecast and alerts to the `forecasted_alerts` table in the database.
+   - **Usage**:
+     ```bash
+     python covid_forecasting.py
+     ```
+   - **Outputs**:
+     - A forecast table with dates, predicted cases, and alert levels.
+
+### 2. **COVID-19 Dashboard**
+   - **Script**: `covid_dashboard.py`
+   - **Description**:
+     - A web dashboard built using Dash and Plotly to visualize forecasted COVID-19 cases and their corresponding alert levels.
+     - Displays an interactive line chart and alert level descriptions.
+   - **Usage**:
+     ```bash
+     python covid_dashboard.py
+     ```
+   - **Dashboard**:
+     - Access via `http://localhost:8000` (or the assigned deployment URL).
+
+---
+
 ## Installation and Deployment Steps
 
 ### Prerequisites
 - Google Cloud account.
-- Installed: [gcloud CLI](https://cloud.google.com/sdk/docs/install), [Docker](https://www.docker.com/), and Go.
+- Installed: [gcloud CLI](https://cloud.google.com/sdk/docs/install), [Docker](https://www.docker.com/), Go, Python, and required Python libraries (`pandas`, `prophet`, `sqlalchemy`, `dash`, `plotly`).
 
 ### Steps to Deploy
 
@@ -53,7 +83,7 @@ This project uses microservices to collect and process data from the City of Chi
      docker build -t gcr.io/<PROJECT-ID>/go-microservice .
      docker push gcr.io/<PROJECT-ID>/go-microservice
      ```
-   - Deploy the microservice to Cloud Run using:
+   - Deploy the microservice to Cloud Run:
      ```bash
      gcloud run deploy go-microservice \
        --image gcr.io/<PROJECT-ID>/go-microservice \
@@ -64,8 +94,16 @@ This project uses microservices to collect and process data from the City of Chi
        --allow-unauthenticated
      ```
 
-4. **Environment Variables**
-   - Set the following environment variables in Cloud Run for the microservice:
+4. **Deploy Python Scripts**
+   - Install dependencies for both scripts:
+     ```bash
+     pip install pandas prophet sqlalchemy dash plotly psycopg2
+     ```
+   - Run `covid_forecasting.py` to generate forecasts.
+   - Deploy `covid_dashboard.py` to a hosting service like Google App Engine or run locally.
+
+5. **Environment Variables**
+   - Set the following environment variables for Python scripts and Cloud Run services:
      - `DB_USER=postgres`
      - `DB_PASSWORD=<your-db-password>`
      - `DB_NAME=chicago_business_intelligence`
@@ -74,6 +112,8 @@ This project uses microservices to collect and process data from the City of Chi
 ---
 
 ## Running Locally
+
+### Go Microservice
 1. Clone the repository and navigate to the project folder.
 2. Modify the database connection string in `main.go`:
    ```go
@@ -85,13 +125,19 @@ This project uses microservices to collect and process data from the City of Chi
    ```
 4. Access the service at `http://localhost:8080`.
 
+### Python Scripts
+1. Run `covid_forecasting.py` to forecast and save alert levels.
+2. Run `covid_dashboard.py` to start the dashboard:
+   ```bash
+   python covid_dashboard.py
+   ```
+3. Open `http://localhost:8000` in your browser to view the dashboard.
+
 ---
 
 ## Notes
 - Use pgAdmin for database management.
-- Review and update the `cloudbuild.yaml` and `Dockerfile` if deploying with different configurations.
+- Review and update the `cloudbuild.yaml`, `Dockerfile`, and Python scripts for your deployment requirements.
+- Refer to Google Cloud's [troubleshooting guide](https://cloud.google.com/docs/troubleshooting) for assistance.
 
-For issues or questions, contact your administrator or refer to the Google Cloud [troubleshooting guide](https://cloud.google.com/docs/troubleshooting).
-
-
-
+--- 
